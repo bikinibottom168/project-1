@@ -88,3 +88,7 @@ sw.*
 
 # Vim swap files
 *.swp
+
+"search.exclude": {
+    "**/node_modules": true
+}

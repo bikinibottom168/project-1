@@ -7,8 +7,8 @@
       :cols="firstImg(i)"
     >
       <img class="image" :src="image" :key="i" @click="index = i" />
-      <vue-gallery-slideshow :images="images" :index="index" @close="index = null"></vue-gallery-slideshow>
     </v-col>
+    <vue-gallery-slideshow :images="images" :index="index" @close="index = null"></vue-gallery-slideshow>
   </v-row>
 </template>
 
@@ -20,6 +20,12 @@ export default {
     return {
       index: null
     };
+  },
+  created() {
+    for (let i = 0; i < this.images.length; i++) {
+      this.images[i] = process.env.BASE_URL_IMAGE + this.images[i];
+      console.log(this.images[i]);
+    }
   },
   components: {
     VueGallerySlideshow

@@ -3,16 +3,15 @@
     <v-row>
       <v-col cols="12" lg="12" class="d-flex justify-space-between">
         <b align="start">การบ้าน</b>
-        <v-dialog
-          v-model="dialog"
-          fullscreen
-          hide-overlay
-          transition="dialog-bottom-transition"
-        >
+        <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="success" v-bind="attrs" v-on="on" outlined
-              >ลงการบ้าน</v-btn
-            >
+            <v-btn color="success" v-bind="attrs" v-on="on" outlined v-if="$auth.loggedIn">ลงการบ้าน</v-btn>
+            <v-btn
+              color="success"
+              @click="alerts('ยังไม่ได้ล็อคอินค่ะ','error')"
+              v-if="!$auth.loggedIn"
+              outlined
+            >ลงการบ้าน</v-btn>
           </template>
           <v-card>
             <v-toolbar dark color="primary">
@@ -29,19 +28,21 @@
             <v-divider></v-divider>
             <v-list three-line subheader>
               <v-container>
-                <v-subheader class="title">ลงการบ้าน น้ำพริก</v-subheader>
+                <v-subheader class="title">ลงการบ้าน {{ title_posts }}</v-subheader>
                 <v-form>
                   <v-row>
                     <v-col cols="12" lg="6">
+                      <v-text-field outlined label="หัวข้อการบ้าน" v-model="title"></v-text-field>
                       <v-textarea
                         outlined
                         label="ลายละเอียดการบ้าน"
                         class="mb-1 pb-0"
+                        v-model="description"
                       ></v-textarea>
                       <small class="ml-4">ให้คะแนนน้อง</small>
                       <v-rating
                         class="ml-4 mt-1"
-                        v-model="rating"
+                        v-model="score"
                         dense
                         background-color="orange lighten-3"
                         color="orange"
@@ -49,58 +50,21 @@
                       ></v-rating>
                     </v-col>
                   </v-row>
-                  <!-- <v-row>
-                    <v-col
-                      v-for="(imgUrl, index) in imagePreviewURL"
-                      :key="index"
-                      class="d-flex child-flex"
-                      cols="1"
-                    >
-                      <v-img
-                        :src="imgUrl"
-                        aspect-ratio="1"
-                        class="grey lighten-2"
-                      >
-                        <template v-slot:placeholder>
-                          <v-row
-                            class="fill-height ma-0"
-                            align="center"
-                            justify="center"
-                          >
-                            <v-progress-circular
-                              indeterminate
-                              color="grey lighten-5"
-                            ></v-progress-circular>
-                          </v-row>
-                        </template>
-                      </v-img>
-                    </v-col>
-                  </v-row>-->
-                  <!-- <v-file-input
-                    class="mt-4"
-                    multiple
-                    accept="image/*"
-                    prepend-inner-icon="mdi-camera"
-                    placeholder="เลือกรูปภาพ"
-                    prepend-icon
-                    outlined
-                    show-size
-                    @change="onFileChange"
-                  ></v-file-input>-->
                   <v-row class="mb-5 mt-1 py-5">
                     <v-col cols="12" lg="6">
                       <upload-images
-                        max="15"
-                        maxError="อัพโหลดไฟล์สูงสุด 15 รูป"
+                        maxError="อัพโหลดไฟล์สูงสุด 10 รูป"
                         uploadMsg="อัพรูปการบ้าน"
                         fileError="อัพรูปไม่สำเร็จ"
                         clearAll="ลบทั้งหมด"
+                        v-model="imagePreviewURL"
+                        @change="handleImages"
                       ></upload-images>
                     </v-col>
                   </v-row>
                   <v-row>
                     <v-col cols="12" lg="6">
-                      <v-btn color="primary" block>ส่งการบ้าน</v-btn>
+                      <v-btn color="primary" block @click="submit">ส่งการบ้าน</v-btn>
                     </v-col>
                   </v-row>
                 </v-form>
@@ -112,12 +76,22 @@
       <v-col
         cols="12"
         lg="12"
+        v-if="comments.length != 0"
         v-for="(comment, index) in comments"
         :key="index"
       >
         <card-comment :comment="comment"></card-comment>
       </v-col>
+      <v-col cols="12" lg="12" v-if="comments.length == 0" align="center">
+        <p text>น้องยังไม่มีการบ้านค่ะพี่ ช่วยน้องรีวิวหน่อยนะคะ น้าาาาา</p>
+      </v-col>
     </v-row>
+    <v-snackbar v-model="alert.enable" top>
+      {{ alert.text }}
+      <template v-slot:action="{ attrs }">
+        <v-btn :color="alert.color" text v-bind="attrs" @click="alert.enable = !alert.enable">Close</v-btn>
+      </template>
+    </v-snackbar>
   </v-col>
 </template>
 
@@ -127,28 +101,72 @@ import CardComment from "~/components/post/CardComment";
 
 export default {
   name: "comment",
-  props: ["comments"],
+  props: ["comments", "post_id", "title_posts"],
   components: {
     UploadImages,
     CardComment
   },
   data() {
     return {
+      imagePreviewURL: null,
       dialog: false,
-      imagePreviewURL: []
+      image: [],
+      title: "",
+      description: "",
+      score: "",
+      alert: {
+        text: "",
+        enable: false,
+        color: ""
+      }
     };
   },
   methods: {
-    onFileChange(file) {
-      // const input = this.$refs.fileInput;
-      this.imagePreviewURL = [];
-      for (let img of file) {
-        const reader = new FileReader();
-        reader.onload = e => {
-          this.imagePreviewURL.push(e.target.result);
-        };
-        reader.readAsDataURL(img);
+    handleImages(files) {
+      for (var i = 0; i < files.length; i++) {
+        this.image.push(files[i]);
       }
+    },
+    alerts(data, color) {
+      this.alert.text = data;
+      this.alert.enable = true;
+      this.alert.color = color;
+    },
+    submit() {
+      console.log("score", this.score);
+      let formData = new FormData();
+      // formData.append("image", this.image);
+      formData.append("title", this.title);
+      formData.append("description", this.description);
+      formData.append("score", this.score);
+      formData.append("posts_id", this.post_id);
+      for (var i = 0; i < this.image.length; i++) {
+        formData.append("image[" + i + "]", this.image[i]);
+      }
+      const post = this.$axios
+        .$post(`/api/v1/member/review`, formData)
+        .then(res => {
+          console.log(res);
+          if (res.status == "ok") {
+            // Add New Review
+            // this.comments.push(res.data);
+            this.image = [];
+            this.title = "";
+            this.description = "";
+            this.score = "";
+            this.dialog = !this.dialog;
+            // // alert
+            this.alert.text = "ลงการบ้านสำเร็จ";
+            this.alert.enable = true;
+            this.alert.color = "success";
+          }
+        })
+        .catch(err => {
+          // alert
+          this.alert.text = "ผิดพลาด";
+          this.alert.enable = true;
+          this.alert.color = "error";
+        });
     }
   }
 };

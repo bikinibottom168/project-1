@@ -5,9 +5,12 @@
       <nuxt />
     </v-main>
 
-    <v-footer padless>
+    <v-footer dark padless>
       <v-col class="text-center" cols="12">
-        <strong>ไซด์ไลน์</strong> Teddek.com
+        ลงงาน
+        <strong>ไซด์ไลน์</strong>กับ Teddek.com
+        <br />
+        <v-btn nuxt to="/post-sideline/post" color="error">ลงงานกับเราฟรี</v-btn>
       </v-col>
     </v-footer>
   </v-app>

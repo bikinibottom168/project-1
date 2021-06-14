@@ -7,7 +7,7 @@
           <v-card-text>
             <v-text-field
               ref="username"
-              v-model="form.username"
+              v-model="form.email"
               :rules="rulesUser"
               :error-messages="errorMessages"
               label="ชื่อผู้ใช้งาน"
@@ -44,9 +44,9 @@
                 <span>Refresh form</span>
               </v-tooltip>
             </v-slide-x-reverse-transition>
-            <v-btn color="success" block rounded="" @click="submit">
-              ล็อคอิน
-            </v-btn>
+            <v-btn color="success" block rounded @click="submitLogin"
+              >ล็อคอิน</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-col>
@@ -56,14 +56,35 @@
 
 <script>
 export default {
+  created() {
+    if (this.$auth.loggedIn) {
+      this.$router.push("/");
+    }
+  },
   data() {
     return {
       form: {
-        username: "",
-        password: "",
-        passwordConfirm: ""
+        email: "",
+        password: ""
       }
     };
+  },
+  methods: {
+    async submitLogin() {
+      try {
+        let response = await this.$auth.loginWith("local", {
+          data: {
+            email: this.form.email,
+            password: this.form.password
+          }
+        });
+        if (this.$auth.loggedIn) {
+          this.$router.push("/");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
   },
   computed: {
     rulesUser() {
