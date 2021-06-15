@@ -14,10 +14,7 @@ export default {
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     script: [
       {
-        src:
-          process.env.NODE_ENV !== "production"
-            ? process.env.BASE_URL_DEV
-            : process.env.BASE_URL_PRODUCTION + "js/qrcode.min.js"
+        src: process.env.BASE_URL_PRODUCTION + "js/qrcode.min.js"
       }
     ]
   },
@@ -35,7 +32,7 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
     "@nuxtjs/vuetify",
-    "@nuxtjs/dotenv"
+    ["@nuxtjs/dotenv", { path: "./" }]
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -69,25 +66,16 @@ export default {
         },
         endpoints: {
           login: {
-            url:
-              process.env.NODE_ENV !== "production"
-                ? process.env.BASE_URL_DEV
-                : process.env.BASE_URL_PRODUCTION + "api/v1/login",
+            url: process.env.BASE_URL_PRODUCTION + "api/v1/login",
             method: "post",
             propertyName: "token"
           },
           logout: {
-            url:
-              process.env.NODE_ENV !== "production"
-                ? process.env.BASE_URL_DEV
-                : process.env.BASE_URL_PRODUCTION + "api/v1/logout",
+            url: process.env.BASE_URL_PRODUCTION + "api/v1/logout",
             method: "delete"
           },
           user: {
-            url:
-              process.env.NODE_ENV !== "production"
-                ? process.env.BASE_URL_DEV
-                : process.env.BASE_URL_PRODUCTION + "api/v1/user/me",
+            url: process.env.BASE_URL_PRODUCTION + "api/v1/user/me",
             method: "get",
             propertyName: "user"
           }
@@ -96,14 +84,9 @@ export default {
     }
   },
 
-  dev: process.env.NODE_ENV !== "production",
-
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL:
-      process.env.NODE_ENV !== "production"
-        ? process.env.BASE_URL_DEV
-        : process.env.BASE_URL_PRODUCTION
+    baseURL: process.env.BASE_URL_PRODUCTION
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -125,10 +108,5 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
-
-  buildModules: [
-    // dotenv
-    ["@nuxtjs/dotenv", { path: "./" }]
-  ]
+  build: {}
 };
