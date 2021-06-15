@@ -12,7 +12,14 @@ export default {
       { hid: "description", name: "description", content: "" }
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
-    script: [{ src: "http://localhost:8000/js/qrcode.min.js" }]
+    script: [
+      {
+        src:
+          process.env.NODE_ENV !== "production"
+            ? process.env.BASE_URL_DEV
+            : process.env.BASE_URL_PRODUCTION + "js/qrcode.min.js"
+      }
+    ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -62,16 +69,25 @@ export default {
         },
         endpoints: {
           login: {
-            url: "http://localhost:8000/api/v1/login",
+            url:
+              process.env.NODE_ENV !== "production"
+                ? process.env.BASE_URL_DEV
+                : process.env.BASE_URL_PRODUCTION + "api/v1/login",
             method: "post",
             propertyName: "token"
           },
           logout: {
-            url: "http://localhost:8000/api/v1/logout",
+            url:
+              process.env.NODE_ENV !== "production"
+                ? process.env.BASE_URL_DEV
+                : process.env.BASE_URL_PRODUCTION + "api/v1/logout",
             method: "delete"
           },
           user: {
-            url: "http://localhost:8000/api/v1/user/me",
+            url:
+              process.env.NODE_ENV !== "production"
+                ? process.env.BASE_URL_DEV
+                : process.env.BASE_URL_PRODUCTION + "api/v1/user/me",
             method: "get",
             propertyName: "user"
           }
@@ -80,9 +96,14 @@ export default {
     }
   },
 
+  dev: process.env.NODE_ENV !== "production",
+
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: "http://localhost:8000"
+    baseURL:
+      process.env.NODE_ENV !== "production"
+        ? process.env.BASE_URL_DEV
+        : process.env.BASE_URL_PRODUCTION
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
