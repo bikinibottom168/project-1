@@ -8,7 +8,11 @@
     >
       <img class="image" :src="image" :key="i" @click="index = i" />
     </v-col>
-    <vue-gallery-slideshow :images="images" :index="index" @close="index = null"></vue-gallery-slideshow>
+    <vue-gallery-slideshow
+      :images="images"
+      :index="index"
+      @close="index = null"
+    ></vue-gallery-slideshow>
   </v-row>
 </template>
 
@@ -23,7 +27,7 @@ export default {
   },
   created() {
     for (let i = 0; i < this.images.length; i++) {
-      this.images[i] = process.env.BASE_URL_IMAGE + this.images[i];
+      this.images[i] = "https://api.teddek.com/" + this.images[i];
       console.log(this.images[i]);
     }
   },

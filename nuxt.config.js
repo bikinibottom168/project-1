@@ -14,7 +14,7 @@ export default {
     // link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     script: [
       {
-        src: process.env.BASE_URL_PRODUCTION + "js/qrcode.min.js"
+        src: "https://api.teddek.com/" + "js/qrcode.min.js"
       }
     ]
   },
@@ -70,16 +70,16 @@ export default {
         },
         endpoints: {
           login: {
-            url: process.env.BASE_URL_PRODUCTION + "api/v1/login",
+            url: "https://api.teddek.com/" + "api/v1/login",
             method: "post",
             propertyName: "token"
           },
           logout: {
-            url: process.env.BASE_URL_PRODUCTION + "api/v1/logout",
+            url: "https://api.teddek.com/" + "api/v1/logout",
             method: "delete"
           },
           user: {
-            url: process.env.BASE_URL_PRODUCTION + "api/v1/user/me",
+            url: "https://api.teddek.com/" + "api/v1/user/me",
             method: "get",
             propertyName: "user"
           }
@@ -90,7 +90,7 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: process.env.BASE_URL_PRODUCTION
+    baseURL: "https://api.teddek.com/"
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

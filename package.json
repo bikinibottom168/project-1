@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
-    "start": "NODE_ENV=production BASE_URL_IMAGE=https://api.teddek.com/ BASE_URL_PRODUCTION=https://api.teddek.com/ nuxt start",
+    "start": "nuxt start",
     "generate": "nuxt generate"
   },
   "dependencies": {

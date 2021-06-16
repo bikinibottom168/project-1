@@ -9,7 +9,14 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12" sm="6" md="4" lg="4" v-for="(datas, index) in posts.data" :key="index">
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+            lg="4"
+            v-for="(datas, index) in posts.data"
+            :key="index"
+          >
             <card-list :post="datas" />
           </v-col>
         </v-row>
@@ -17,7 +24,6 @@
     </v-row>
   </v-container>
 </template>
-
 
 <script>
 import CardList from "~/components/Card";
@@ -36,7 +42,7 @@ export default {
   },
   methods: {
     getImage(data) {
-      return process.env.BASE_URL_IMAGE + data;
+      return "https://api.teddek.com/" + data;
     }
   }
 };
@@ -47,7 +53,6 @@ export default {
   max-width: 1200px;
 }
 </style>
-
 
 <script>
 import CardList from "~/components/profile/Card";
@@ -73,7 +78,7 @@ export default {
   },
   methods: {
     getImage(data) {
-      return process.env.BASE_URL_IMAGE + data;
+      return "https://api.teddek.com/" + data;
     }
   }
 };

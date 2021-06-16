@@ -1,7 +1,12 @@
 <template>
   <v-container>
     <v-row align="center" justify="center">
-      <v-col cols="4" align="center" justify="center" v-if="$fetchState.pending == true">
+      <v-col
+        cols="4"
+        align="center"
+        justify="center"
+        v-if="$fetchState.pending == true"
+      >
         <v-img :src="require('~/assets/loading.gif')"></v-img>
       </v-col>
     </v-row>
@@ -10,23 +15,36 @@
         <v-avatar color="primary" size="128" class="mb-2">
           <img
             v-show="profile.member.user_image != null"
-            :src="
-              previewImage != null ? previewImage : getProfileImage
-            "
+            :src="previewImage != null ? previewImage : getProfileImage"
           />
-          <v-icon v-show="profile.member.user_image == null" color="white" size="48">face</v-icon>
+          <v-icon
+            v-show="profile.member.user_image == null"
+            color="white"
+            size="48"
+            >face</v-icon
+          >
         </v-avatar>
         <br />
-        <v-btn text color="success" @click="updateImage" v-if="statusChange">บันทึก</v-btn>
-        <v-btn text color="error" @click="clearImage" v-if="statusChange">ยกเลิก</v-btn>
+        <v-btn text color="success" @click="updateImage" v-if="statusChange"
+          >บันทึก</v-btn
+        >
+        <v-btn text color="error" @click="clearImage" v-if="statusChange"
+          >ยกเลิก</v-btn
+        >
         <v-btn
           text
           block
           class="blue--text caption"
           @click="$refs.changeImage.click()"
           v-if="$auth.loggedIn && $auth.user.id == $route.params.id"
-        >เปลี่ยนรูป</v-btn>
-        <input type="file" @change="changeImage" ref="changeImage" v-show="false" />
+          >เปลี่ยนรูป</v-btn
+        >
+        <input
+          type="file"
+          @change="changeImage"
+          ref="changeImage"
+          v-show="false"
+        />
         <h1>
           <v-row
             v-show="editEnable"
@@ -51,7 +69,8 @@
                 color="success"
                 v-show="editEnable"
                 @click="changeName"
-              >บันทึกแก้ไข</v-btn>
+                >บันทึกแก้ไข</v-btn
+              >
             </v-col>
           </v-row>
           <b v-show="!editEnable">{{ names }}</b>
@@ -63,15 +82,25 @@
             color
             v-show="!editEnable"
             @click="editEnable = !editEnable"
-          >แก้ไขชื่อ</v-btn>
+            >แก้ไขชื่อ</v-btn
+          >
         </h1>
-        <v-btn rounded color="primary" outlined>ผู้ติดตาม {{ profile.member.follow_count }}</v-btn>
-        <v-btn rounded color="primary" outlined>การบ้าน {{ profile.member.review_count }}</v-btn>
+        <v-btn rounded color="primary" outlined
+          >ผู้ติดตาม {{ profile.member.follow_count }}</v-btn
+        >
+        <v-btn rounded color="primary" outlined
+          >การบ้าน {{ profile.member.review_count }}</v-btn
+        >
       </v-col>
       <v-col cols="12" lg="4">
         <p class="title">การบ้าน</p>
         <v-row>
-          <v-col cols="12" lg="12" v-for="(comment, index) in review" :key="index">
+          <v-col
+            cols="12"
+            lg="12"
+            v-for="(comment, index) in review"
+            :key="index"
+          >
             <card-comment :comment="comment"></card-comment>
           </v-col>
         </v-row>
@@ -81,7 +110,13 @@
     <v-snackbar v-model="alert.enable" top="true">
       {{ alert.text }}
       <template v-slot:action="{ attrs }">
-        <v-btn :color="alert.color" text v-bind="attrs" @click="alert.enable = !alert.enable">Close</v-btn>
+        <v-btn
+          :color="alert.color"
+          text
+          v-bind="attrs"
+          @click="alert.enable = !alert.enable"
+          >Close</v-btn
+        >
       </template>
     </v-snackbar>
   </v-container>
@@ -211,7 +246,7 @@ export default {
       return this.display_name;
     },
     getProfileImage() {
-      return process.env.BASE_URL_IMAGE + this.profile.member.user_image;
+      return "https://api.teddek.com/" + this.profile.member.user_image;
     }
   }
 };

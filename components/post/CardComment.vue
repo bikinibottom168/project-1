@@ -7,7 +7,10 @@
           style="text-decoration: none; color: inherit;"
         >
           <v-avatar size="48">
-            <img alt="user" :src="getImageProfile(comment.get_user.user_image)" />
+            <img
+              alt="user"
+              :src="getImageProfile(comment.get_user.user_image)"
+            />
           </v-avatar>
           <b class="success--text ml-1">{{ comment.get_user.display_user }}</b>
           <small>{{ dateFormat(comment.created) }}</small>
@@ -35,9 +38,21 @@
         >
           <img class="image" :src="image" :key="i" @click="indexReview = i" />
         </v-col>
-        <vue-gallery-slideshow :images="images" :index="indexReview" @close="indexReview = null"></vue-gallery-slideshow>
-      </v-row>คะแนน
-      <v-rating dark v-model="comment.score" color="primary" small dense readonly ripple></v-rating>
+        <vue-gallery-slideshow
+          :images="images"
+          :index="indexReview"
+          @close="indexReview = null"
+        ></vue-gallery-slideshow> </v-row
+      >คะแนน
+      <v-rating
+        dark
+        v-model="comment.score"
+        color="primary"
+        small
+        dense
+        readonly
+        ripple
+      ></v-rating>
     </v-card-text>
   </v-card>
 </template>
@@ -54,7 +69,7 @@ export default {
   created() {
     let tmp = this.comment.image.split("|");
     tmp.forEach(value => {
-      this.images.push(process.env.BASE_URL_IMAGE + value);
+      this.images.push("https://api.teddek.com/" + value);
     });
   },
   data() {
@@ -71,7 +86,7 @@ export default {
         .fromNow();
     },
     getImageProfile(data) {
-      return process.env.BASE_URL_IMAGE + data;
+      return "https://api.teddek.com/" + data;
     }
     // getImage(data) {
 

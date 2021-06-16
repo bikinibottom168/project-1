@@ -3,19 +3,27 @@
     <v-img class="white--text align-end" height="200px" :src="getImage">
       <v-card-title>
         <v-row align="center" justify="end">
-          <v-btn small color="primary" class="text-body-1">฿ {{ post.price | priceFormat }}</v-btn>
+          <v-btn small color="primary" class="text-body-1"
+            >฿ {{ post.price | priceFormat }}</v-btn
+          >
         </v-row>
       </v-card-title>
     </v-img>
     <v-card-text class="d-block text--primary">
       <p class="text-body-1 pb-0 mb-0 text-truncate">{{ post.title }}</p>
-      <p class="text-caption" color="text--success">{{ post.sex | sexFormat }}</p>
+      <p class="text-caption" color="text--success">
+        {{ post.sex | sexFormat }}
+      </p>
       <div v-if="post.enable == 1">
         <p class="my-1">วันหมดอายุ</p>
-        <v-chip small :color="checkExpireColor(post.vip)">{{ checkExpireTextTest }}</v-chip>
+        <v-chip small :color="checkExpireColor(post.vip)">{{
+          checkExpireTextTest
+        }}</v-chip>
         <v-divider class="my-2" />
         <p class="my-1">วันหมดอายุ</p>
-        <v-chip small :color="checkExpireColor(post.expire)">{{ checkExpireText(post.expire) }}</v-chip>
+        <v-chip small :color="checkExpireColor(post.expire)">{{
+          checkExpireText(post.expire)
+        }}</v-chip>
       </div>
       <div v-if="post.enable == 0">
         <v-chip small color="warning">หยุดแสดงโพส VIP</v-chip>
@@ -25,13 +33,26 @@
       </div>
     </v-card-text>
     <v-card-actions>
-      <v-btn nuxt block :to="{ name: 'profile-post-edit-id', params: { id: post.id } }">แก้ไขข้อมูล</v-btn>
+      <v-btn
+        nuxt
+        block
+        :to="{ name: 'profile-post-edit-id', params: { id: post.id } }"
+        >แก้ไขข้อมูล</v-btn
+      >
     </v-card-actions>
     <v-card-actions>
-      <v-btn nuxt block :to="{ name: 'profile-post-edit-id', params: { id: post.id } }">เติมเวลา</v-btn>
+      <v-btn
+        nuxt
+        block
+        :to="{ name: 'profile-post-edit-id', params: { id: post.id } }"
+        >เติมเวลา</v-btn
+      >
     </v-card-actions>
     <v-card-actions>
-      <v-switch v-model="post.enable" :label="enable ? 'เปิดโพส' : 'ปิดโพส'"></v-switch>
+      <v-switch
+        v-model="post.enable"
+        :label="enable ? 'เปิดโพส' : 'ปิดโพส'"
+      ></v-switch>
     </v-card-actions>
   </v-card>
 </template>
@@ -48,7 +69,7 @@ export default {
   computed: {
     getImage() {
       let res = this.post.image.split("|");
-      return process.env.BASE_URL_IMAGE + res[0];
+      return "https://api.teddek.com/" + res[0];
     },
     getEnable() {
       return this.post.enable == 1 ? true : false;
