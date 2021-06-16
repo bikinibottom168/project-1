@@ -43,6 +43,10 @@ export default {
     "@nuxtjs/auth-next"
   ],
 
+  generate: {
+    crawler: false
+  },
+
   auth: {
     redirect: {
       login: "/login",
