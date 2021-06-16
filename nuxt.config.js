@@ -44,7 +44,8 @@ export default {
   ],
 
   generate: {
-    crawler: false
+    crawler: false,
+    fallback: true
   },
 
   auth: {
@@ -112,5 +113,6 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {}
+  build: {},
+  target: "static"
 };
